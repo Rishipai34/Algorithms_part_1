@@ -3,17 +3,18 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     private int open[];
     private WeightedQuickUnionUF ob1;
-    private int open_num=0 ;
+    private int open_num ;
     private int n2;
     /* Creates a grid of n by n staring from 0 to n^2 +1
     where 0 and n^2 +1 are reserved for uppermost and lowermost element
      */
     public Percolation(int n ){
         n2 =n;
+        open_num=0;
         ob1 = new WeightedQuickUnionUF(n*n+2);
         open = new int[n*n+2];
         for(int i=0; i < n; i++){
-            ob1.union(i+1,1);
+            ob1.union(i+1,0);
             ob1.union(n*n - i , n*n + 1);
         }
     }
@@ -33,7 +34,7 @@ public class Percolation {
             if(isopen(row, col -1)) ob1.union(k,k-1);
         }
         if (row != 1){
-            if(isopen(row-1,col)) ob1.union(k-n2,k);
+            if(isopen(row-1,col)) ob1.union(k,k-n2);
         }
         if(col != n2 ) {
             if (isopen(row , col + 1)) ob1.union(k , k + 1);

@@ -53,7 +53,7 @@
     <configuration name="PercolationStats" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="PercolationStats" />
       <module name="Percolated" />
-      <option name="PROGRAM_PARAMETERS" value="4 10" />
+      <option name="PROGRAM_PARAMETERS" value="90 100" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">

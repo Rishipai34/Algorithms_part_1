@@ -4,28 +4,29 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 public class PercolationStats {
     private static int trials2,n2;
-    private int x[];
+    private double x[];
     private Percolation[] ob2 = new Percolation[trials2];
     // Performs independent trials on an n by n grid
     public PercolationStats(int n, int trials){
         int k,h;
         n2=n;
         trials2 = trials ;
-        x = new int[trials];
+        x = new double[trials];
+        int open=0;
         if((n<=0)||(trials<=0)){
             throw new IllegalArgumentException("n and Trials should not be less tha 0");
         }
-
         for(int i = 0 ; i < trials ; i++){
             ob2[i] = new Percolation(n);
-            while(!ob2[i].Percolates()){
+            do{
                 k = StdRandom.uniform(1,n+1);
                 h = StdRandom.uniform(1,n+1);
                if(!ob2[i].isopen(k,h)){
                    ob2[i].open(k,h);
+                   open++;
                }
-            }
-            x[i]=(ob2[i].NumberOfOpenSites()/(n2*n2));
+            }while(!ob2[i].Percolates());
+            x[i]=((double)(ob2[i].NumberOfOpenSites())/(double)(n*n));
         }
     }
     //Finds the mean of the independent trials performed
