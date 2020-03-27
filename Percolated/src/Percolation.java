@@ -11,15 +11,16 @@ public class Percolation {
     public Percolation(int n ){
         n2 =n;
         ob1 = new WeightedQuickUnionUF(n*n+2);
-        open = new int[n*n];
+        open = new int[n*n+2];
         for(int i=0; i < n; i++){
             ob1.union(i+1,1);
-            ob1.union(n*n-i,n*n + 2);
+            ob1.union(n*n - i , n*n + 1);
         }
     }
     //Opens a given cell
     public void open( int row, int col){
-        int k = row*n2 + col - 1;
+        int k;
+        k = (row-1)*n2 + col ;
         if(k>(n2*n2)||(k<1)){
             throw new IllegalArgumentException("Argument out of range ");
         }
@@ -29,7 +30,7 @@ public class Percolation {
             if(isopen(row+1,col)) ob1.union(k+n2,k);
         }
         if(col != 1 ){
-            if(isopen(row, col +1)) ob1.union(k,k+1);
+            if(isopen(row, col -1)) ob1.union(k,k-1);
         }
         if (row != 1){
             if(isopen(row-1,col)) ob1.union(k-n2,k);
@@ -41,15 +42,17 @@ public class Percolation {
     }
     //Checks if the cell is open
     public boolean isopen(int row, int col){
-        int k = row*n2 + col-1;
+        int k;
+        k= (row-1)*n2 + col;
         if(k>(n2*n2)||(k<1)){
-            throw new IllegalArgumentException("Argument out of range ");
+            throw new IllegalArgumentException("Argument out of range k = " + k );
         }
         return(open[k]==1);
     }
     //Checks if the cell is connected to root
     public boolean isfull(int row , int col ){
-        int k = row*n2 + col - 1;
+        int k;
+        k= (row-1)*n2 + col;
         if(k>(n2*n2)||(k<1)){
             throw new IllegalArgumentException("Argument out of range ");
         }
@@ -60,6 +63,7 @@ public class Percolation {
     public int NumberOfOpenSites(){
         return open_num;
     }
+    //Checks if system percolates
     public boolean Percolates(){
         return ob1.connected((n2 * n2 + 1), 0);
     }
