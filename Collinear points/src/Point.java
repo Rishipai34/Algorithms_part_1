@@ -50,7 +50,12 @@ public class Point implements Comparable<Point> {
     }
 
     public Comparator<Point> slopeOrder() {
-        return Comparator.comparingDouble(this::slopeTo);
+        return ( a, b) ->{
+            if(this.slopeTo(a) > this.slopeTo(b)) return 1;
+            else if(this.slopeTo(a) < this.slopeTo(b)) return -1;
+            else if(this.slopeTo(a) == this.slopeTo(b)) return 0;
+            return 0;
+        };
     }
 
 
