@@ -24,8 +24,10 @@ public class Point implements Comparable<Point> {
 
     public int compareTo(Point that) {
         if (this.y > that.y) return +1;
-        if (this.y < that.y) return -1;
-        return Integer.compare(this.x, that.x);
+        else if (this.y < that.y) return -1;
+        else if (this.x > that.x) return +1;
+        else if (this.x < that.x) return -1;
+        else return 0;
     }
 
     public double slopeTo(Point that) {
