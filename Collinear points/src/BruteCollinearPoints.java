@@ -19,6 +19,7 @@ public class BruteCollinearPoints {
                             points1[1] = item;
                             points1[2] = value;
                             points1[3] = point;
+                            Arrays.sort(points1);
                             double slope1 = points1[0].slopeTo(points1[1]);
                             double slope3 = points1[2].slopeTo(points1[3]);
                             double slope2 = points1[1].slopeTo(points1[2]);
