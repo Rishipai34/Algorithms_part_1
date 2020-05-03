@@ -3,45 +3,30 @@ import java.util.Arrays;
 public class BruteCollinearPoints {
     private LineSegment[] lines;
     private int linesize = 0;
+    private Object[] linestemp;
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
-        Point[] p = new Point[points.length];
-        Point[] q = new Point[points.length];
-        Point[] points1 = new Point[4];
-        int linesize1 = 0;
-        LineSegment[] linestemp = new LineSegment[points.length];
-        Arrays.sort(points);
-        for (Point element : points) {
-            if (linesize1 != linesize ){
-                points1[0] = null;
-                points1[1] = null;
-                points1[2] = null;
-                points1[3] = null;
-                linesize1 = linesize;
-            }
-            points1[0] = element;
-            for (Point item : points) {
-                if (element.compareTo(item) != 0) {
-                    points1[1] = item;
-                    double slope1 = points1[0].slopeTo(points1[1]);
-                    for (Point value : points) {
-                        if ((value.compareTo(element) != 0) && (value.compareTo(item) != 0)) {
-                            points1[2] = value;
-                            double slope2 = points1[1].slopeTo(points1[2]);
-                            if (slope1 == slope2) {
-                                for (Point point : points)
-                                    if ((point.compareTo(element) != 0) && (point.compareTo(value) != 0) && (point.compareTo(item) != 0) && (item.compareTo(value) != 0) && (element.compareTo(value) != 0) && (item.compareTo(element) != 0)) {
-                                        points1[3] = point;
-                                        double slope3 = points1[2].slopeTo(points1[3]);
-                                        if (slope2 == slope3)
-                                            if (!Arrays.asList(p).contains(points1[3]) && !Arrays.asList(q).contains(points1[0]) && !Arrays.asList(q).contains(points1[3]) && !Arrays.asList(p).contains(points1[0])) {
-                                                linestemp[linesize] = new LineSegment(points1[0], points1[3]);
-                                                p[linesize] = points1[0];
-                                                q[linesize++] = points1[3];
-                                            }
+        if (checkduplicate(points)) {
+            throw new IllegalArgumentException("Cannot have duplicate points.");
+        }
 
-                                    }
+        linestemp = new LineSegment[points.length];
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                for (int k = j + 1; k < points.length; k++) {
+                    for (int y = k + 1; y < points.length; y++) {
+                        Point p = points[i];
+                        Point q = points[j];
+                        Point r = points[k];
+                        Point s = points[y];
+                        if (p.slopeTo(q) == p.slopeTo(r) && p.slopeTo(r) == p.slopeTo(s)) {
+                            Point[] tuple = new Point[] {p, q, r, s};
+                            Arrays.sort(tuple);
+                            linestemp[linesize] = new LineSegment(tuple[0], tuple[3]);
+                            linesize++;
+                            if (linesize == linestemp.length) {
+                                resize(linesize * 2);
                             }
                         }
                     }
@@ -49,7 +34,29 @@ public class BruteCollinearPoints {
             }
         }
         lines = new LineSegment[linesize];
-        System.arraycopy(linestemp, 0, lines, 0, linesize);
+        for (int i = 0; i < linesize; i++) {
+            lines[i] = (LineSegment) linestemp[i];
+        }
+    }
+
+    // Checks the existence of duplicate points
+    private boolean checkduplicate(Point[] points) {
+        if (points.length > 0) {
+            Point[] pointsCopy = new Point[points.length];
+            System.arraycopy(points, 0, pointsCopy, 0, points.length);
+            Arrays.sort(pointsCopy);
+            Point currentPoint = pointsCopy[0];
+            for (int i = 1; i < pointsCopy.length; i++) {
+                if (pointsCopy[i].compareTo(currentPoint) == 0) {
+                    return true;
+                } else {
+                    currentPoint = pointsCopy[i];
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
     }
 
     // the number of line segments
@@ -60,5 +67,14 @@ public class BruteCollinearPoints {
     // Returns the line segments
     public LineSegment[] segments() {
         return lines;
+    }
+    // Resize the array if required
+    private void resize(int capacity) {
+        assert capacity >= linesize;
+        if (capacity > linesize) {
+            Object[] temp = new Object[capacity];
+            System.arraycopy(linestemp, 0, temp, 0, linesize);
+            linestemp = temp;
+        }
     }
 }
