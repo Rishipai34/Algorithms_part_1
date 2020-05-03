@@ -1,48 +1,62 @@
-import edu.princeton.cs.algs4.StdOut;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.List;
 
 public class FastCollinearPoints {
     private  LineSegment[] lines;
-    private int linesize = 0;
-    private Point[] sorted;
 
-    public FastCollinearPoints(Point[] points) {
-        lines = new LineSegment[points.length];
-        for (Point a: points) {
-            sorted = points;
-            Arrays.sort(sorted, a.slopeOrder());
-            /*for (Point temp1 : sorted) {
-                StdOut.println(temp1.toString());
-            }*/
-            for (int j = 1; j < points.length; j++) {
-                int i = j;
-                j = check(j);
-                if (j - i >= 2) {
-                    LineSegment num = new LineSegment(points[j], points[i]);
-                    if (!Arrays.asList(lines).contains(num)) {
-                        lines[linesize] = new LineSegment(points[i], points[j]);
-                        if (linesize <= points.length-2) linesize++;
+    // finds all line segments containing 4 or more points
+    public FastCollinearPoints(Point[] points)
+    {
+        List<LineSegment> linestemp = new ArrayList<>();
+        Arrays.sort(points);
+        for (int i = 0; i < points.length-1; i++) {
+            List<Double> firstslopearray = new ArrayList<>();
+            List<Double> secondslopearray = new ArrayList<>();
+            Point[] aux = points.clone();
+            if (i != 0)
+                Arrays.sort(aux, 0, i-1, aux[i].slopeOrder());
+            Arrays.sort(aux, i+1, aux.length, aux[i].slopeOrder());
+            for (int n = i+1; n < points.length; n++) {
+                double slopes = aux[i].slopeTo(aux[n]);
+                secondslopearray.add(slopes);
+            }
+            for (int n = 0; n < i; n++) {
+                double slopes = aux[i].slopeTo(aux[n]);
+                firstslopearray.add(slopes);
+            }
+            int head = 0, tail = 0;
+            int k = 0;
+            while (head < secondslopearray.size()-1) {
+                while (k < secondslopearray.size()-1) {
+                    double slope1 = secondslopearray.get(k);
+                    double slope2 = secondslopearray.get(k+1);
+                    if (slope1 == slope2) {
+                        tail++;
                     }
+                    else {
+                        k++;
+                        break;
+                    }
+                    k++;
                 }
+                if (tail - head >= 2) {
+                    // checkfor duplicates
+                    double slope = aux[i].slopeTo(aux[i+tail+1]);
+                    if (!firstslopearray.contains(slope))
+                        linestemp.add(new LineSegment(aux[i], aux[i+tail+1]));
+                    // add it to segment
+                }
+                head = tail+1;
+                tail = head;
             }
         }
+        lines = linestemp.toArray(new LineSegment[linestemp.size()]);
     }
 
-    // Checks the collinear points
-    private int check(int k) {
-        int bar = k;
-        if ((bar <= sorted.length-2) && (sorted[0].slopeTo(sorted[bar]) ==  sorted[0].slopeTo(sorted[bar+1]))) {
-            bar++;
-            bar = check(bar);
-        }
-        return bar;
-    }
     // the number of line segments
     public int numberOfSegments() {
-        return linesize;
+        return lines.length;
     }
 
     // Returns the line segments
