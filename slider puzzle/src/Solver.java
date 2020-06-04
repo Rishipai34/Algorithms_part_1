@@ -1,17 +1,16 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Stack;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Solver {
 
-    private List<Board> solutionTiles = new ArrayList<>();
+    private Stack<Board> solutionTiles = new Stack<>();
     private boolean solved;
-    private SolverStep finalStep;
 
     private static class SolverStep {
         private int moves;
@@ -38,31 +37,36 @@ public class Solver {
 
         MinPQ<SolverStep> impotwin = new MinPQ<>(solverStepComparator);
         impotwin.insert(new SolverStep(0, initial.twin(), null));
-        SolverStep step1 = impostep.delMin();
-        SolverStep step1twin = impotwin.delMin();
-
-        while ((!step1.board.isGoal()) && (!step1twin.board.isGoal())) {
+        SolverStep step1;
+        SolverStep step1twin;
+        while ((!impostep.min().board.isGoal()) && (!impotwin.min().board.isGoal())) {
+            step1 = impostep.delMin();
             for (Board first : step1.board.neighbors()) {
                 if (!(counted(step1, first))) {
                     impostep.insert(new SolverStep(step1.moves + 1, first, step1));
                 }
             }
+            step1twin = impotwin.delMin();
             for (Board second : step1twin.board.neighbors()) {
                 if (!(counted(step1, second))) {
-                    impostep.insert(new SolverStep(step1twin.moves + 1, second, step1twin));
+                    impotwin.insert(new SolverStep(step1twin.moves + 1, second, step1twin));
                 }
             }
         }
         step1 = impostep.delMin();
         if (step1.board.isGoal()) {
-            finalStep = step1;
             solved = true;
+            solutionTiles.push(step1.board);
+            while (step1.PreviousStep != null) {
+                step1 = step1.PreviousStep;
+                solutionTiles.push(step1.board);
+            }
         }
     }
 
     // to check if the neighbour has already been included in the solution sequence
     private boolean counted(SolverStep lastStep, Board newBoard) {
-        SolverStep PreviousStep = lastStep.PreviousStep;
+        SolverStep PreviousStep = lastStep;
         while (PreviousStep != null) {
             if (PreviousStep.board.equals(newBoard)) {
                 return true;
@@ -90,17 +94,36 @@ public class Solver {
 
     // sequence of boards in a shortest solution
     public Iterable<Board> solution() {
-        if (!solved) {
-            return null;
+        Iterable<Board> iterable;
+        if (isSolvable()) {
+            iterable = SolutionIterator::new;
+        } else {
+            iterable = null;
         }
-        SolverStep current = finalStep;
-        Stack<Board> solution = new Stack<>();
-        solution.push(current.board);
-        while (current.PreviousStep != null) {
-            solution.push(current.PreviousStep.board);
-            current = current.PreviousStep;
+        return iterable;
+    }
+
+    private class SolutionIterator implements Iterator<Board> {
+
+        @Override
+        public boolean hasNext() {
+
+            return solutionTiles.size() > 0;
         }
-        return solution;
+
+        @Override
+        public Board next() {
+            if (hasNext()) {
+                return solutionTiles.pop();
+            } else {
+                throw new NoSuchElementException(" There exists no further boards ");
+            }
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException(" Remove operation is not supported in this iterator. ");
+        }
     }
 
     // test client (see below)

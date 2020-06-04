@@ -6,63 +6,77 @@ import java.util.NoSuchElementException;
 public class Board {
 
     private Board[] neighbours;
-    private int[][] blocks;
+    private int[][] tiles;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
-        this.blocks = copy(tiles);
+        this.tiles = copy(tiles);
     }
 
     // to copy a two dimensional array
     private int[][] copy(int[][] arrayToCopy) {
         int[][] copy = new int[arrayToCopy.length][];
-        for (int r = 0; r < arrayToCopy.length; r++) {
-            copy[r] = arrayToCopy[r].clone();
+        for (int row = 0; row < arrayToCopy.length; row++) {
+            copy[row] = arrayToCopy[row].clone();
         }
         return copy;
     }
 
-    private void exchangeBlocks(int[][] tiles, int iF, int jF, int iS, int jS) {
-        int first = tiles[iF][jF];
-        tiles[iF][jF] = tiles[iS][jS];
-        tiles[iS][jS] = first;
+    private void exchangeBlocks(int[][] tiles2, int iF, int jF, int iS, int jS) {
+        int first = tiles2[iF][jF];
+        tiles2[iF][jF] = tiles2[iS][jS];
+        tiles2[iS][jS] = first;
     }
 
     // string representation of this board
     public String toString() {
-        StringBuilder stringVariable = new StringBuilder(blocks.length + "\n");
-        for (int[] row : blocks)
+        StringBuilder stringVariable = new StringBuilder(tiles.length + "\n");
+        String stringVariable2;
+        for (int[] row : tiles) {
             for (int block : row) {
-                stringVariable.append(" ");
-                stringVariable.append(block);
+
+                stringVariable.append("    ");
+                stringVariable2 = Integer.toString(block);
+                int n = stringVariable2.length();
+                if (stringVariable2.length() > 1) {
+                    for (int i = 4; i > n; i--) {
+                        stringVariable.append(" ");
+                    }
+                    stringVariable.append(block);
+                } else {
+                    stringVariable.append("   ");
+                    stringVariable.append(block);
+                }
             }
+            stringVariable.append("\n\n");
+        }
         return stringVariable.toString();
     }
 
     // board dimension
     public int dimension() {
-        return blocks.length;
+        return tiles.length;
     }
 
     // number of tiles out of place
     public int hamming() {
-        int value = 0;
-        for (int i = 0; i < blocks.length; i++)
-            for (int j = 0; j < blocks[i].length; j++) {
-                if (blocks[i][j] != i * blocks.length + j + 1) value++;
+        int val = -1;
+        for (int i = 0; i < tiles.length; i++)
+            for (int j = 0; j < tiles[i].length; j++) {
+                if (tiles[i][j] != (i * tiles.length + j + 1)) val++;
             }
-        return value;
+        return val;
     }
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
         int value = 0;
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[i].length; j++) {
-                int expectedValue = (i * blocks.length + j + 1);
-                if (blocks[i][j] != expectedValue && blocks[i][j] != 0) {
-                    int actualValue = blocks[i][j];
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                int expectedValue = (i * tiles.length + j + 1);
+                if (tiles[i][j] != expectedValue && tiles[i][j] != 0) {
+                    int actualValue = tiles[i][j];
                     actualValue--;
                     int goalI = actualValue / dimension();
                     int goalJ = actualValue % dimension();
@@ -79,55 +93,54 @@ public class Board {
     }
 
     // does this board equal y?
-    public boolean equals(Object y) {
-        if (this == y) return true;
-        if (y == null || getClass() != y.getClass()) return false;
+    public boolean equals(Object given) {
+        if (this == given) return true;
+        if (given == null || getClass() != given.getClass()) return false;
 
-        Board that = (Board) y;
-        if (this.blocks.length != that.blocks.length) return false;
-        for (int i = 0; i < blocks.length; i++) {
-            if (this.blocks[i].length != that.blocks[i].length) return false;
-            for (int j = 0; j < blocks[i].length; j++) {
-                if (this.blocks[i][j] != that.blocks[i][j]) return false;
+        Board that = (Board) given;
+        if (this.tiles.length != that.tiles.length) return false;
+        for (int i = 0; i < tiles.length; i++) {
+            if (this.tiles[i].length != that.tiles[i].length) return false;
+            for (int j = 0; j < tiles[i].length; j++) {
+                if (this.tiles[i][j] != that.tiles[i][j]) return false;
             }
         }
-
         return true;
     }
 
     private void findNeighbours() {
-        List<Board> foundNeighbours = new ArrayList<>();
+        List<Board> NeighboursFound = new ArrayList<>();
         int i = 0;
         int j = 0;
-        while (blocks[i][j] != 0) {
+        while (tiles[i][j] != 0) {
             j++;
-            if (j >= blocks.length) {
+            if (j >= tiles.length) {
                 j = 0;
                 i++;
             }
         }
         if (i > 0) {
-            int[][] neighborTiles = copy(blocks);
+            int[][] neighborTiles = copy(tiles);
             exchangeBlocks(neighborTiles, i - 1, j, i, j);
-            foundNeighbours.add(new Board(neighborTiles));
+            NeighboursFound.add(new Board(neighborTiles));
         }
         if (i < dimension() - 1) {
-            int[][] neighborTiles = copy(blocks);
+            int[][] neighborTiles = copy(tiles);
             exchangeBlocks(neighborTiles, i, j, i + 1, j);
-            foundNeighbours.add(new Board(neighborTiles));
+            NeighboursFound.add(new Board(neighborTiles));
         }
         if (j > 0) {
-            int[][] neighborTiles = copy(blocks);
+            int[][] neighborTiles = copy(tiles);
             exchangeBlocks(neighborTiles, i, j - 1, i, j);
-            foundNeighbours.add(new Board(neighborTiles));
+            NeighboursFound.add(new Board(neighborTiles));
         }
         if (j < dimension() - 1) {
-            int[][] neighborTiles = copy(blocks);
+            int[][] neighborTiles = copy(tiles);
             exchangeBlocks(neighborTiles, i, j, i, j + 1);
-            foundNeighbours.add(new Board(neighborTiles));
+            NeighboursFound.add(new Board(neighborTiles));
         }
-        neighbours = new Board[foundNeighbours.size()];
-        neighbours = foundNeighbours.toArray(neighbours);
+        neighbours = new Board[NeighboursFound.size()];
+        neighbours = NeighboursFound.toArray(neighbours);
     }
 
     // all neighboring boards
@@ -166,12 +179,12 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int[][] twinBlocks = copy(blocks);
+        int[][] twinBlocks = copy(tiles);
         int i = 0;
         int j = 0;
         while (twinBlocks[i][j] == 0 || twinBlocks[i][j + 1] == 0) {
             j++;
-            if (j >= twinBlocks.length) {
+            if (j >= twinBlocks.length - 1) {
                 i++;
                 j = 0;
             }
