@@ -1,4 +1,4 @@
-The Following are the Specifications of the programs in the repository
+The Following are the Specifications of the programs in the repository 
 Assignment 1:
 https://coursera.cs.princeton.edu/algs4/assignments/percolation/specification.php
 Assignment 2:
