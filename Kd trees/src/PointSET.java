@@ -2,11 +2,12 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Stack;
 
+import java.util.NoSuchElementException;
 import java.util.TreeSet;
 
 public class PointSET {
 
-    private TreeSet<Point2D> points;
+    private final TreeSet<Point2D> points;
 
     // construct an empty set of points
     public PointSET() {
@@ -34,6 +35,9 @@ public class PointSET {
 
     // does the set contain point p?
     public boolean contains(Point2D p) {
+        if (isEmpty()) {
+            throw new NoSuchElementException("The tree is empty ");
+        }
         if (p == null) {
             throw new IllegalArgumentException(" The argument for PointSET.contains cannot be null");
         } else {
