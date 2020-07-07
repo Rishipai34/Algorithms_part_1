@@ -9,7 +9,7 @@ public class NearestNeighborVisualizer {
         String filename = args[0];
         In in = new In(filename);
         PointSET brute = new PointSET();
-        KdTreeTest kdtree = new KdTreeTest();
+        KdTree kdtree = new KdTree();
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();

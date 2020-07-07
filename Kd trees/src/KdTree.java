@@ -15,13 +15,15 @@ public class KdTree {
         private boolean isVertical;
         private Point2D val;
         private Point2D key;
+        private RectHV rectOfNode;
 
-        node(Point2D key, Point2D val, node left, node right, boolean isVertical) {
+        node(Point2D key, boolean isVertical, RectHV rectOfNode) {
             this.key = key;
-            this.val = val;
-            this.left = left;
-            this.right = right;
+            this.val = key;
             this.isVertical = isVertical;
+            this.rectOfNode = rectOfNode;
+            this.left = null;
+            this.right = null;
         }
     }
 
@@ -47,19 +49,19 @@ public class KdTree {
         if (p == null) {
             throw new IllegalArgumentException(" Passed point cannot be null");
         }
-        root = put(root, p, p, true);
+        root = put(root, p, true, region);
     }
 
-    private node put(node p, Point2D key, Point2D val, boolean isVertical) {
+    private node put(node p, Point2D key, boolean isVertical, RectHV rect) {
         if (p == null) {
             size++;
-            return new node(key, val, null, null, isVertical);
+            return new node(key, isVertical, rect);
         } else if ((p.key.x() == key.x()) && (p.key.y() == key.y())) {
-            p.val = val;
+            p.val = key;
         } else if ((p.isVertical && (p.key.x() >= key.x())) || (!p.isVertical && (p.key.y() >= key.y()))) {
-            p.right = put(p.right, key, val, !isVertical);
+            p.right = put(p.right, key, !isVertical, RectHigh(p));
         } else {
-            p.left = put(p.left, key, val, !isVertical);
+            p.left = put(p.left, key, !isVertical, RectLow(p));
         }
         return p;
     }
@@ -103,20 +105,22 @@ public class KdTree {
                 new Point2D(rect.xmin(), nod.key.y()).drawTo(new Point2D(rect.xmax(), nod.key.y()));
             }
 
-            draw(nod.left, RectHigh(nod, rect));
-            draw(nod.right, RectLow(nod, rect));
+            draw(nod.left, RectHigh(nod));
+            draw(nod.right, RectLow(nod));
         }
 
     }
 
-    private RectHV RectHigh(node nod, RectHV rect) {
+    private RectHV RectHigh(node nod) {
+        RectHV rect = nod.rectOfNode;
         if (nod.isVertical) {
             return new RectHV(nod.key.x(), rect.ymin(), rect.xmax(), rect.ymax());
         }
         return new RectHV(rect.xmin(), nod.key.y(), rect.xmax(), rect.ymax());
     }
 
-    private RectHV RectLow(node nod, RectHV rect) {
+    private RectHV RectLow(node nod) {
+        RectHV rect = nod.rectOfNode;
         if (nod.isVertical) {
             return new RectHV(rect.xmin(), rect.ymin(), nod.key.x(), rect.ymax());
         }
@@ -131,67 +135,65 @@ public class KdTree {
             throw new NoSuchElementException(" There exists no elements in the tree ");
         } else {
             Stack<Point2D> points = new Stack<Point2D>();
-            getPoints(root, region, rect, points);
+            getPoints(root, rect, points);
             return points;
         }
     }
 
-    private void getPoints(node point, RectHV toSearch, RectHV queryRect, Stack<Point2D> points) {
+    private void getPoints(node point, RectHV queryRect, Stack<Point2D> points) {
         if (point != null) {
-            if (toSearch.intersects(queryRect)) {
-                if (queryRect.contains(point.val)) points.push(point.val);
-                getPoints(point.right, RectLow(point, toSearch), queryRect, points);
-                getPoints(point.left, RectHigh(point, toSearch), queryRect, points);
+            if (point.rectOfNode.intersects(queryRect)) {
+                if (queryRect.contains(point.val)) {
+                    points.push(point.val);
+                }
+                getPoints(point.right, queryRect, points);
+                getPoints(point.left, queryRect, points);
             }
         }
     }
 
-    private Point2D findNear(node start, Point2D queryPoint, RectHV toSearch, Point2D closePoint) {
+    private Point2D findNear(node p, Point2D queryPoint, Point2D closePoint) {
         Point2D closest = closePoint;
-        if (start != null) {
-            if (closest == null || queryPoint.distanceSquaredTo(closest) > toSearch.distanceSquaredTo(closest)) {
-                if (closest == null) {
-                    closest = start.key;
-                } else {
-                    if (start.key.distanceSquaredTo(queryPoint) < closest.distanceSquaredTo(queryPoint)) {
-                        closest = start.key;
-                    }
-                }
+        if (p != null) {
+            if ((closest == null) || (queryPoint.distanceSquaredTo(closest) >= p.rectOfNode.distanceSquaredTo(queryPoint))) {
+                if (closest == null)
+                    closest = p.key;
+                if (queryPoint.distanceSquaredTo(closest) > queryPoint.distanceSquaredTo(p.key))
+                    closest = p.key;
 
-                if (start.isVertical) {
-                    RectHV rightRect = new RectHV(toSearch.xmin(), toSearch.ymin(), start.key.x(), toSearch.ymax());
-                    RectHV leftRect = new RectHV(start.key.x(), toSearch.ymin(), toSearch.xmax(), toSearch.ymax());
-                    if (start.key.x() > queryPoint.x()) {
-                        findNear(start.left, queryPoint, leftRect, closest);
-                        findNear(start.right, queryPoint, rightRect, closest);
+                if (p.isVertical) {
+
+                    if (p.key.x() >= queryPoint.x()) {
+                        closest = findNear(p.left, queryPoint, closest);
+                        closest = findNear(p.right, queryPoint, closest);
                     } else {
-                        findNear(start.right, queryPoint, rightRect, closest);
-                        findNear(start.left, queryPoint, leftRect, closest);
+                        closest = findNear(p.right, queryPoint, closest);
+                        closest = findNear(p.left, queryPoint, closest);
                     }
-                }
-                if (!start.isVertical) {
-                    RectHV upRect = new RectHV(toSearch.xmin(), toSearch.ymin(), start.key.x(), toSearch.ymax());
-                    RectHV downRect = new RectHV(start.key.x(), toSearch.ymin(), toSearch.xmax(), toSearch.ymax());
-                    if (start.key.y() > queryPoint.y()) {
-                        findNear(start.left, queryPoint, downRect, closest);
-                        findNear(start.right, queryPoint, upRect, closest);
+                } else {
+
+                    if (p.key.y() >= queryPoint.y()) {
+                        closest = findNear(p.left, queryPoint, closest);
+                        closest = findNear(p.right, queryPoint, closest);
                     } else {
-                        findNear(start.right, queryPoint, downRect, closest);
-                        findNear(start.left, queryPoint, upRect, closest);
+                        closest = findNear(p.right, queryPoint, closest);
+                        closest = findNear(p.left, queryPoint, closest);
                     }
                 }
             }
         }
         return closest;
+
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
-        return findNear(root, p, region, null);
+        return findNear(root, p, null);
     }
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
+
     }
 
 }
