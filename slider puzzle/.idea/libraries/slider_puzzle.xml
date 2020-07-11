@@ -1,7 +1,8 @@
 <component name="libraryTable">
-  <library name="algs4">
+  <library name="slider puzzle">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/algs4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sliderpuzzle.zip!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
