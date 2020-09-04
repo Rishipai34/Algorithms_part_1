@@ -9,13 +9,13 @@ import java.util.NoSuchElementException;
 
 public class Solver {
 
-    private Stack<Board> solutionTiles = new Stack<>();
+    private final Stack<Board> solutionTiles = new Stack<>();
     private boolean solved;
 
     private static class SolverStep {
-        private int moves;
-        private Board board;
-        private SolverStep PreviousStep;
+        private final int moves;
+        private final Board board;
+        private final SolverStep PreviousStep;
 
         public SolverStep(int moves, Board board, SolverStep PreviousStep) {
             this.board = board;

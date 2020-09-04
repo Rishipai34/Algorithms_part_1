@@ -7,7 +7,7 @@ public class BruteCollinearPoints {
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
-        if (checkduplicate(points)) {
+        if (checkDuplicate(points)) {
             throw new IllegalArgumentException("Cannot have duplicate points.");
         }
 
@@ -40,7 +40,7 @@ public class BruteCollinearPoints {
     }
 
     // Checks the existence of duplicate points
-    private boolean checkduplicate(Point[] points) {
+    private boolean checkDuplicate(Point[] points) {
         if (points.length > 0) {
             Point[] pointsCopy = new Point[points.length];
             System.arraycopy(points, 0, pointsCopy, 0, points.length);
