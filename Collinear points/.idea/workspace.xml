@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="40eb14bd-7041-4897-84bd-23ddea436f55" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BruteCollinearPoints.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/BruteCollinearPoints.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BruteCollinearPoints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BruteCollinearPoints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FastCollinearPoints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FastCollinearPoints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../slider puzzle/sliderpuzzle.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FastCollinearPoints.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/FastCollinearPoints.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +34,10 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -44,6 +46,19 @@
   <component name="RunManager">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -65,6 +80,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -75,25 +91,13 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1595337151604</updated>
+      <workItem from="1608390733352" duration="141000" />
+      <workItem from="1608755281083" duration="292000" />
+      <workItem from="1610560286736" duration="75000" />
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="841" y="425" width="228" height="263" key="#Notifications" timestamp="1595362578985">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="841" y="425" width="228" height="263" key="#Notifications/0.27.1920.1053@0.27.1920.1053" timestamp="1595362578985" />
-    <state x="738" y="315" width="424" height="491" key="FileChooserDialogImpl" timestamp="1595411423024">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="738" y="315" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1595411423024" />
-    <state x="443" y="131" width="1024" height="852" key="SettingsEditor" timestamp="1595411425125">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="443" y="131" width="1024" height="852" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1595411425125" />
-    <state x="754" y="469" width="412" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595411431699">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="754" y="469" width="412" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.1053@0.27.1920.1053" timestamp="1595411431699" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

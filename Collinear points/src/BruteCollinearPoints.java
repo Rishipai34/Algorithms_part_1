@@ -53,10 +53,8 @@ public class BruteCollinearPoints {
                     currentPoint = pointsCopy[i];
                 }
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     // the number of line segments
