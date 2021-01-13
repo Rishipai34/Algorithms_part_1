@@ -5,7 +5,7 @@ public class BruteCollinearPoints {
     private int linesize = 0;
     private Object[] linestemp;
 
-    // finds all line segments containing 4 points
+    // finds all line segments containing 4 points asdfasf
     public BruteCollinearPoints(Point[] points) {
         if (checkDuplicate(points)) {
             throw new IllegalArgumentException("Cannot have duplicate points.");
